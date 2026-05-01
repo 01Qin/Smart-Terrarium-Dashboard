@@ -1,3 +1,11 @@
+
+// ── Smart Terrarium - Main UI ──────────────────────────────────────────────────
+// This file defines the main application window.
+// It shows live sensor data (humidity and temperature),
+// displays alerts when values go out of range,
+// and allows controlling the mist system via MQTT
+//  ──────────────────────────────────────────────────────────────────────────────
+
 import QtQuick
 import QtQuick.VirtualKeyboard
 import QtQuick.Controls
@@ -5,6 +13,7 @@ import QtQuick.Window
 import QtCharts
 
 
+// ── Window configuration ───────────────────────────────────────────────────────
 Window {
     id: root
     minimumWidth:  360
