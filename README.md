@@ -1,6 +1,6 @@
 # 🌿 Smart Terrarium Dashboard
 
-![Qt](https://img.shields.io/badge/Qt-6.x-green)
+![Qt](https://img.shields.io/badge/Qt-6.11-green)
 ![QML](https://img.shields.io/badge/QML-UI-blue)
 ![C++](https://img.shields.io/badge/C++-Backend-blue)
 ![Status](https://img.shields.io/badge/Status-Active-success)
