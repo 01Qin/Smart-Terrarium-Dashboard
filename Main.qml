@@ -13,7 +13,7 @@ import QtQuick.Window
 import QtCharts
 
 
-// ── Window configuration ───────────────────────────────────────────────────────
+// ── Window configuration ───────────
 Window {
     id: root
     minimumWidth:  360
@@ -21,12 +21,13 @@ Window {
     visible: true
     title: qsTr("Smart Terrarium 🪴")
 
-
+// ── Threshold configuration ───────────
     property real minHumidity: 60
     property real maxHumidity: 85
     property real minTemp: 18
     property real maxTemp: 26
 
+    // Used to freeze humidity value at alert time
     property real alertHumidityValue: NaN
     property bool humidityLow: environment.valid && environment.humidity < minHumidity
     property bool humidityHigh: environment.valid && environment.humidity > maxHumidity
