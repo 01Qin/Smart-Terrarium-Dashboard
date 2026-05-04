@@ -29,13 +29,23 @@ Window {
 
     // Used to freeze humidity value at alert time
     property real alertHumidityValue: NaN
+
+    // Alert condition flags
     property bool humidityLow: environment.valid && environment.humidity < minHumidity
     property bool humidityHigh: environment.valid && environment.humidity > maxHumidity
     property bool tempLow: environment.valid && environment.temp < minTemp
     property bool tempHigh: environment.valid && environment.temp > maxTemp
     property bool alertShown: false
+
+    /*
+     * Determines whether a history panel is open.
+     * Possible values: "", "humidity", "temperature"
+     */
     property string activeMetric: ""
 
+    /* ===== Dynamic UI Colors ===== */
+
+    // Color changes based on humidity state
     property color humidityColor: {
         if (!environment.valid) return "#abd1c6"
         if (environment.humidity > maxHumidity) return "#e16162" // too humid
@@ -43,7 +53,7 @@ Window {
         return "#abd1c6" // Green
     }
 
-
+    // Color changes based on temperature sta
     property color tempColor: {
         if (!environment.valid) return "#abd1c6"
         if (environment.temp > maxTemp) return "#e16162" // too warm
@@ -51,10 +61,15 @@ Window {
         return "#abd1c6"
     }
 
-    // background
+    
+    /* ============================================================================
+     * Background Layer
+     * ========================================================================== */
+
     Item {
         anchors.fill: parent
 
+        // Background image
         Image {
             id: backgroundImage
             anchors.fill: parent
@@ -64,6 +79,11 @@ Window {
             horizontalAlignment: Image.AlignHCenter
             verticalAlignment: Image.AlignVCenter
         }
+
+
+        /* ============================================================================
+         * Main Content Area
+         * ========================================================================== */
 
         Item {
             anchors.fill: parent
@@ -76,7 +96,7 @@ Window {
             spacing: 20
             width: parent.width - 80
 
-            // Header
+            /* ===== Header ===== */
             Column {
                 spacing: 4
                 width: parent.width
@@ -101,7 +121,7 @@ Window {
                 }
             }
 
-            // Sensor area
+            /* ===== Sensor Cards ===== */
             Item {
                 width: 560
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -110,10 +130,12 @@ Window {
                 Row {
                     spacing: 32
                     anchors.centerIn: parent
+                    // Hide cards when history view is open
                     opacity: activeMetric === "" ? 1.0 : 0.0
 
                     Behavior on opacity { NumberAnimation {duration:200}}
 
+                /* --- Humidity Card --- */
                 SensorCard{
                     label: "Humidity"
                     visible: activeMetric === "" ? 1 : 0
@@ -128,6 +150,7 @@ Window {
                     onClicked: activeMetric = "humidity"
                 }
 
+                /* --- Temperature Card --- */
                 SensorCard{
                     label: "Temperature"
                     visible: activeMetric === "" ? 1: 0
@@ -144,7 +167,7 @@ Window {
                 }
             }
 
-                // history panel
+                /* ===== History Chart Overlay ===== */
                     HistoryChart {
                         anchors.fill: parent
                         visible: activeMetric !== ""
@@ -157,7 +180,7 @@ Window {
                     }
                 }
 
-
+            /* ===== Instruction Text ===== */
             Text {
                 text: "Tap a card to view history 💬"
                 font.pixelSize: 12
@@ -176,7 +199,7 @@ Window {
             }
 
 
-            // status bar
+            /* ===== Status Bar ===== */
             Rectangle{
                 width: parent.width
                 height: 44
@@ -206,7 +229,7 @@ Window {
             }
 
 
-            // metadata
+            /* ===== Metadata ===== */
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Source: " + environment.source
@@ -219,7 +242,7 @@ Window {
                 width: 1
             }
 
-            // control zone
+            /* ===== Mist Control ===== */
             Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 height: 70
@@ -273,6 +296,10 @@ Window {
     }
 }
 
+    
+    /* ============================================================================
+     * Alerts
+     * ========================================================================== */
 
     AlertDialog{
         id: alertDialog
