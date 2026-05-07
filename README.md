@@ -6,103 +6,63 @@
 ![Status](https://img.shields.io/badge/Status-Active-success)
 ![License](https://img.shields.io/badge/License-Educational-lightgrey)
 
-
-A modern **Qt Quick (QML + C++) dashboard** for monitoring terrarium.  
-The application displays live **humidity** and **temperature** data, visually highlights safe and dangerous conditions, and provides a clean, touch‑friendly user interface inspired by real industrial dashboards.
-
-The project currently uses **Open‑Meteo** as a simulated data source and is designed to seamlessly transition to **real sensors via MQTT or Raspberry pi** in the future.
+A modern **Qt Quick (QML + C++) dashboard** for monitoring terrarium environments. This application displays live environmental data, visually highlights safe/dangerous conditions, and is built on a scalable C++ backend.
 
 ---
 
 ## ✨ Features
 
 ### ✅ Live Environment Monitoring
-- Real‑time **humidity (%)** and **temperature (°C)** updates
-- Automatic refresh using a C++ backend timer
-- Data sourced from **Open‑Meteo API**
+- **Real-time Updates:** Automatic refresh every 5 seconds via a C++ `QTimer` to ensure the dashboard is always current.
+- **Dual-Metric Tracking:** Monitors Temperature (°C) and Humidity (%) simultaneously.
+- **History Persistence:** The C++ model records data points into a `QVariantList` history, ready for charting and trend analysis.
 
-### 🎛 Interactive Dashboard UI
-- Clickable **Humidity** and **Temperature** cards
-- Only the selected card displays live values (focused view)
-- Smooth animations for value and color changes
+### 🚦 Smart Visual Alerts & Logic
+- **Dynamic Card Colors:** Sensor cards change color based on real-time safety thresholds:
+  - 🟢 **Healthy:** Optimal growing conditions.
+  - 🟠 **Warning:** Conditions dropping below ideal (Too dry/Too cold).
+  - 🔴 **Critical:** High risk (Too hot/Mold risk).
+- **Automated Alerts:** A custom `AlertDialog` component triggers automatically with descriptive messages when values cross critical safety boundaries.
 
-### 🚦 Smart Visual Alerts
-- Cards automatically change color based on thresholds:
-  - 🟢 Healthy
-  - 🟠 Too Low
-  - 🔴 Too High / Mold Risk
-- Status bar shows current environment state
-- Styled **AlertDialog** pops up for critical conditions
-
-### 🎨 Modern Design
-- Background image with transparent UI overlays
-- Rounded, card‑based layout
-- Consistent colors and typography
-- Optimized for desktop and touch screens
-
-### 🧠 Clean Architecture
-- Clear separation between:
-  - **C++ backend (logic & networking)**
-  - **QML frontend (UI & interaction)**
-- Ready for future MQTT / IoT integration
+### 🎨 Modern Dashboard UI
+- **Interactive Design:** Clickable sensor cards allow the user to toggle focus between different environmental metrics.
+- **Translucent Overlays:** A sleek, semi-transparent UI layer over a natural background for a modern aesthetic.
+- **Responsive Layout:** Optimized for both desktop and touch-screen interfaces.
 
 ---
 
-## 🖼 UI Overview
+## 🛠 Technical Architecture
 
-- Background image visible through transparent UI elements
-- Centered header with title and subtitle
-- Two main sensor cards:
-  - 💧 Humidity
-  - 🌡 Temperature
-- Status information (Mold Risk, Mode, Connection)
-- Control buttons (Simulation / Auto Mode / Mist ON/OFF)
+### 🧠 C++ Backend (`EnvironmentModel` & `OpenMeteo`)
+- **Object-Oriented Model:** Uses a dedicated `EnvironmentModel` class to bridge the gap between networking logic and the UI.
+- **Signal/Slot Communication:** Leverages `Q_PROPERTY` and `NOTIFY` signals to ensure the QML interface updates instantly without manual polling.
+- **Asynchronous Networking:** Uses `QNetworkAccessManager` to fetch and parse JSON data from the Open-Meteo API without blocking the UI thread.
 
----
-
-## 🌐 Data Source
-
-The project uses the **Open‑Meteo API** to simulate real sensor data.
-
-### Used fields
-- Temperature: `current.temperature_2m`
-- Humidity: `current.relative_humidity_2m`
-
-### Example API endpoint
-
-## 🚨 Alert Thresholds
-A timer in `OpenMeteo.cpp` periodically refreshes the data and updates  
-the shared environment model.
+### 🎨 QML Frontend
+- **Modular Components:** Built with reusable components (`SensorCard.qml` and `AlertDialog.qml`) for easy maintenance.
+- **Reactive Bindings:** UI states are directly bound to C++ properties, ensuring high performance and low latency.
 
 ---
 
-### 💧 Humidity
-- **Too Low:** `< 60 %`  
-- **Healthy:** `60 – 85 %`  
-- **Mold Risk:** `> 85 %`  
+## 🚨 Environmental Safety Thresholds
 
-### 🌡 Temperature
-- **Too Cold:** `< 18 °C`  
-- **Healthy:** `18 – 26 °C`  
-- **Too Hot:** `> 26 °C`  
-
-These thresholds control:
-- Card color changes  
-- Status indicators  
-- Alert dialog pop‑ups  
+| Metric | Low (Warning) | Healthy (Optimal) | High (Critical) |
+| :--- | :--- | :--- | :--- |
+| **Humidity** | < 60% | 60% – 85% | > 85% (Mold Risk) |
+| **Temperature**| < 4°C | 4°C – 26°C | > 26°C |
 
 ---
 
 ## 📁 Project Structure
 ```
-├── main.cpp
-├── EnvironmentModel.h / .cpp
-├── OpenMeteo.h / .cpp
+├── main.cpp                     # Application entry point
+├── EnvironmentModel.h / .cpp    # Core data model & history logic
+├── OpenMeteo.h / .cpp           # API integration & network refresh logic
 ├── qml/
-│   ├── Main.qml
-│   ├── SensorCard.qml
-│   ├── AlertDialog.qml
-│   └── assets/
+│   ├── Main.qml                 # Primary UI Layout & alert management
+│   ├── SensorCard.qml           # Reusable UI component for environment metrics
+│   ├── AlertDialog.qml          # Custom styled popup for critical warnings
+│   └── assets/                  # High-quality icons and background imagery
 │       ├── backgrounds/
 │       └── icons/
 └── README.md
@@ -121,10 +81,10 @@ These thresholds control:
 
 ## 🎯 Project Purpose
 
-This project serves as:
-- A learning project for **Qt Quick + C++**  
-- A foundation for a real **IoT terrarium system**  
-- A reusable dashboard architecture for sensor‑based applications  
+This project serves as a robust foundation for a smart terrarium system, demonstrating:
+- A clean separation of concerns between **C++ Logic** and **QML Design**.
+- Real-time API data consumption and visualization.
+- User-centric alert systems for environmental safety.
 
 ---
 
